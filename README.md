@@ -13,10 +13,14 @@ Currently lacking many features and compatibility, there isn't much to be said r
 3. Cross platform. Currently, this API is only compatible with X Server on Linux. In the future, compatibility with Wayland and Windows is planned. MacOS compatibility is not currently planned.
 4. UI tooling. Similar to that of Qt, UI tooling is planned, but this will most likely be after a 1.0 release.
 5. Lua API. After a 1.0 release, a Lua compatible library will be released alongside the main API.
+6. Example programs will eventually be part of this repository.
 
 #### To Note
 
 This API is still heavily under development, and design goals and choices are still rapidly changing. Currently, the scope is based around shape rendering, future goals include text rendering, audio and image loading, and UI/Widget elements.
+
+Also, currently all rendering is done as _Software Rendering_. This is much slower and more cumbersome than _Hardware Accelerated_ rendering, as pixel data is stored and read through RAM, and processed on the CPU.
+**Shared Memory (SHM)** is being used on X11 to mitigate the performace bottleneck, and is currently _REQUIRED_. This will change shortly to accomodate those without access to **SHM** on X11 platforms.
 
 ## Building
 
