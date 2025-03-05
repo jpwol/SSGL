@@ -80,7 +80,7 @@ int main() {
 
     SharpEvent event;
     while (running) {
-       SharpPollEvents(window, &e);
+       SharpPollEvents(window, &event);
        switch (event.type) {
             case SharpKeyPress:
                 switch (e.keyPressed) {
