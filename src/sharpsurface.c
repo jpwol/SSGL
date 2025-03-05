@@ -63,6 +63,10 @@ void SharpFillRect(SharpSurface* surface, SharpRect* rect, unsigned int color) {
       row_start[i + 2] = color;
       row_start[i + 3] = color;
     }
+
+    for (; i < w; i++) {
+      row_start[i] = color;
+    }
   }
 }
 
