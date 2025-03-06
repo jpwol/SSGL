@@ -98,12 +98,12 @@ int main() {
     // Colors are in the format ARGB.
     SharpClearSurfaceColor(surface, 0xff000000); // Clear the surface color to Black.
 
-    SharpFillRect(surface, &rect, 0xff0000ff);   // Fill the rect with Green.
+    SharpFillRect(surface, &rect, 0xff0000ff);   // Fill the rect with Blue.
 
-    SharpUpdateWindowSurface(surface);           // Puts the image created on the surface to
+    SharpUpdateWindowSurface(window);           // Puts the image created on the surface to
                                                  // the window.
     }
 }
 ```
 
-This will create a green rectangle at `(100, 100)` of size `40x40`.
+This will create a blue rectangle at `(100, 100)` of size `40x40`.
