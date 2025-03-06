@@ -78,10 +78,81 @@ void SharpFillRect(SharpSurface* surface, SharpRect* rect, unsigned int color) {
 
 void SharpDrawPoint(SharpSurface* surface, SharpPoint* point,
                     unsigned int color) {
-  unsigned int* pixel = (unsigned int*)(surface->pixels);
+  if (point->x < 0 || point->y < 0 || point->x >= surface->w ||
+      point->y >= surface->h)
+    return;
 
-  unsigned int* row_start = pixel + point->y * surface->w;
-  row_start[point->x] = color;
+  ((unsigned int*)surface->pixels)[point->y * surface->w + point->x] = color;
+}
+
+void SharpDrawCircle(SharpSurface* surface, SharpPoint* point, int radius,
+                     unsigned int color) {
+  int x = radius;
+  int y = 0;
+  int decision = 1 - radius;
+
+  int width = surface->w;
+  int height = surface->h;
+
+  unsigned int* pixels = (unsigned int*)surface->pixels;
+
+  while (x >= y) {
+    // precompute each group of points for every iteration
+    int px[] = {point->x + x, point->x - x, point->x + x, point->x - x,
+                point->x + y, point->x - y, point->x + y, point->x - y};
+
+    int py[] = {point->y + y, point->y + y, point->y - y, point->y - y,
+                point->y + x, point->y + x, point->y - x, point->y - x};
+
+    for (int i = 0; i < 8; i++) {
+      // Bounds check each point to make sure they're within the surface
+      int mask_x = px[i] >= 0 && px[i] < width;
+      int mask_y = py[i] >= 0 && py[i] < height;
+      int index = (py[i] * width) + px[i];
+
+      // lil bit o' bit math; if either mask evaluates to false, they both do,
+      // which zeroes out the index
+      index &= -(mask_x & mask_y);
+      pixels[index] = color;
+
+      // branchless programming fucking sucks
+      // also, two's complement fucking sucks. signed integers can suck me
+    }
+
+    // ((unsigned int*)
+    //      surface->pixels)[((point->y + y) * surface->w) + (point->x + x)] =
+    //     color;
+    // ((unsigned int*)
+    //      surface->pixels)[((point->y + y) * surface->w) + (point->x - x)] =
+    //     color;
+    // ((unsigned int*)
+    //      surface->pixels)[((point->y - y) * surface->w) + (point->x + x)] =
+    //     color;
+    // ((unsigned int*)
+    //      surface->pixels)[((point->y - y) * surface->w) + (point->x - x)] =
+    //     color;
+    // ((unsigned int*)
+    //      surface->pixels)[((point->y + x) * surface->w) + (point->x + y)] =
+    //     color;
+    // ((unsigned int*)
+    //      surface->pixels)[((point->y + x) * surface->w) + (point->x - y)] =
+    //     color;
+    // ((unsigned int*)
+    //      surface->pixels)[((point->y - x) * surface->w) + (point->x + y)] =
+    //     color;
+    // ((unsigned int*)
+    //      surface->pixels)[((point->y - x) * surface->w) + (point->x - y)] =
+    //     color;
+
+    y++;
+
+    if (decision <= 0) {
+      decision += 2 * y + 1;
+    } else {
+      x--;
+      decision += 2 * (y - x) + 1;
+    }
+  }
 }
 
 void SharpUpdateWindowSurface(SharpWindow* window) {

@@ -33,6 +33,9 @@ void SharpFillRect(SharpSurface* surface, SharpRect* rect, unsigned int color);
 void SharpDrawPoint(SharpSurface* surface, SharpPoint* point,
                     unsigned int color);
 
+void SharpDrawCircle(SharpSurface* surface, SharpPoint* point, int radius,
+                     unsigned int color);
+
 void SharpUpdateWindowSurface(SharpWindow* window);
 
 void SharpBlitSurface(SharpSurface* surface);
