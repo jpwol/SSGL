@@ -1,25 +1,31 @@
 #include "SharpSurface.h"
 
 SharpSurface* SharpGetWindowSurface(SharpWindow* window) {
-  SharpSurface* surface = (SharpSurface*)malloc(sizeof(SharpSurface));
+  SharpSurface* s = (SharpSurface*)malloc(sizeof(SharpSurface));
 
-  surface->w = window->w;
-  surface->h = window->h;
+  s->w = window->w;
+  s->h = window->h;
 
-  surface->pixels = window->data->image->data;
-  surface->ximage = window->data->image;
+  s->pixels = window->data->image->data;
+  s->ximage = window->data->image;
 
-  // Not necessary for the window surface, will use for other surfaces tho
-  // surface->ximage = XCreateImage(
-  //     window->display, DefaultVisual(window->display, window->screen),
-  //     DefaultDepth(window->display, window->screen), ZPixmap, 0,
-  //     (char*)surface->pixels, surface->w, surface->h, 32, surface->w *
-  //     4);
-
-  return surface;
+  return s;
 }
 
-void SharpSetDrawColor(SharpSurface* surface, int r, int g, int b) {}
+SharpSurface* SharpCreateSurface(SharpWindow* window, int width, int height) {
+  SharpSurface* s = (SharpSurface*)malloc(sizeof(SharpSurface));
+
+  // NEED TO ALLOCATE shminfo for SURFACE
+  //
+  // CONSIDER CHANGING WINDOW TO HOLD A SHARP SURFACE INSTEAD OF XShmSegmentInfo
+  // AND PUT XShmSegmentInfo into SURFACE STRUCT      MAYBE??
+  s->ximage = XShmCreateImage(window->display,
+                              DefaultVisual(window->display, window->screen),
+                              DefaultDepth(window->display, window->screen),
+                              ZPixmap, NULL, NULL, width, height);
+
+  return s;
+}
 
 void SharpClearSurfaceColor(SharpSurface* surface, unsigned int color) {
   uint32_t* pixels = (uint32_t*)surface->pixels;
@@ -70,7 +76,13 @@ void SharpFillRect(SharpSurface* surface, SharpRect* rect, unsigned int color) {
   }
 }
 
-void SharpFillColor(SharpSurface* surface) {}
+void SharpDrawPoint(SharpSurface* surface, SharpPoint* point,
+                    unsigned int color) {
+  unsigned int* pixel = (unsigned int*)(surface->pixels);
+
+  unsigned int* row_start = pixel + point->y * surface->w;
+  row_start[point->x] = color;
+}
 
 void SharpUpdateWindowSurface(SharpWindow* window) {
   XShmPutImage(window->display, window->window, window->data->gc,
