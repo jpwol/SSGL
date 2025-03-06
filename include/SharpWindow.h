@@ -26,9 +26,6 @@ typedef struct SharpWindow {
   SharpWindowData* data;
 } SharpWindow;
 
-/*
- *
- */
 extern int SharpInit();
 
 extern SharpWindow* SharpCreateWindow(int width, int height, const char* title);
