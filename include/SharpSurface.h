@@ -26,12 +26,15 @@ SharpSurface* SharpCreateSurface(SharpWindow* window, int width, int height);
 
 void SharpClearSurfaceColor(SharpSurface* surface, unsigned int color);
 
+void SharpDrawPoint(SharpSurface* surface, SharpPoint* point,
+                    unsigned int color);
+
+void SharpDrawLine(SharpSurface* surface, int x1, int y1, int x2, int y2,
+                   unsigned int color);
+
 void SharpDrawRect(SharpSurface* surface, SharpRect* rect);
 
 void SharpFillRect(SharpSurface* surface, SharpRect* rect, unsigned int color);
-
-void SharpDrawPoint(SharpSurface* surface, SharpPoint* point,
-                    unsigned int color);
 
 void SharpDrawCircle(SharpSurface* surface, SharpPoint* point, int radius,
                      unsigned int color);

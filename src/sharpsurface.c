@@ -42,6 +42,53 @@ void SharpClearSurfaceColor(SharpSurface* surface, unsigned int color) {
   }
 }
 
+// Change to take int x int y instead of a SharpPoint structure
+void SharpDrawPoint(SharpSurface* surface, SharpPoint* point,
+                    unsigned int color) {
+  if (point->x < 0 || point->y < 0 || point->x >= surface->w ||
+      point->y >= surface->h)
+    return;
+
+  ((unsigned int*)surface->pixels)[point->y * surface->w + point->x] = color;
+}
+
+void SharpDrawLine(SharpSurface* surface, int x1, int y1, int x2, int y2,
+                   unsigned int color) {
+  // if (x1 > x2) {
+  //   x1 = x1 ^ x2;
+  //   x2 = x1 ^ x2;
+  //   x1 = x1 ^ x2;
+  // }
+  // if (y1 > y2) {
+  //   y1 = y1 ^ y2;
+  //   y2 = y1 ^ y2;
+  //   y1 = y1 ^ y2;
+  // }
+
+  // int slope = 2 * (y2 - y1);
+  // int slope_error = slope - (x2 - x1);
+
+  int dx = x2 - x1;
+  int dy = y2 - y1;
+  int decision = 2 * dy - dx;
+
+  unsigned int* pixels = (unsigned int*)surface->pixels;
+  for (int x = x1, y = y1; x <= x2; x++) {
+    if (x1 < 0 || x1 > surface->w || x2 < 0 || x2 > surface->w || y1 < 0 ||
+        y1 > surface->h || y2 < 0 || y2 > surface->h)
+      continue;
+    pixels[y * surface->w + x] = color;
+
+    if (decision > 0) {
+      y++;
+      decision += 2 * (dy - dx);
+    }
+    if (decision <= 0) {
+      decision += 2 * dy;
+    }
+  }
+}
+
 void SharpDrawRect(SharpSurface* surface, SharpRect* rect) {}
 
 void SharpFillRect(SharpSurface* surface, SharpRect* rect, unsigned int color) {
@@ -74,15 +121,6 @@ void SharpFillRect(SharpSurface* surface, SharpRect* rect, unsigned int color) {
       row_start[i] = color;
     }
   }
-}
-
-void SharpDrawPoint(SharpSurface* surface, SharpPoint* point,
-                    unsigned int color) {
-  if (point->x < 0 || point->y < 0 || point->x >= surface->w ||
-      point->y >= surface->h)
-    return;
-
-  ((unsigned int*)surface->pixels)[point->y * surface->w + point->x] = color;
 }
 
 void SharpDrawCircle(SharpSurface* surface, SharpPoint* point, int radius,
@@ -119,31 +157,6 @@ void SharpDrawCircle(SharpSurface* surface, SharpPoint* point, int radius,
       // also, two's complement fucking sucks. signed integers can suck me
     }
 
-    // ((unsigned int*)
-    //      surface->pixels)[((point->y + y) * surface->w) + (point->x + x)] =
-    //     color;
-    // ((unsigned int*)
-    //      surface->pixels)[((point->y + y) * surface->w) + (point->x - x)] =
-    //     color;
-    // ((unsigned int*)
-    //      surface->pixels)[((point->y - y) * surface->w) + (point->x + x)] =
-    //     color;
-    // ((unsigned int*)
-    //      surface->pixels)[((point->y - y) * surface->w) + (point->x - x)] =
-    //     color;
-    // ((unsigned int*)
-    //      surface->pixels)[((point->y + x) * surface->w) + (point->x + y)] =
-    //     color;
-    // ((unsigned int*)
-    //      surface->pixels)[((point->y + x) * surface->w) + (point->x - y)] =
-    //     color;
-    // ((unsigned int*)
-    //      surface->pixels)[((point->y - x) * surface->w) + (point->x + y)] =
-    //     color;
-    // ((unsigned int*)
-    //      surface->pixels)[((point->y - x) * surface->w) + (point->x - y)] =
-    //     color;
-
     y++;
 
     if (decision <= 0) {
@@ -154,6 +167,9 @@ void SharpDrawCircle(SharpSurface* surface, SharpPoint* point, int radius,
     }
   }
 }
+
+void SharpFillCircle(SharpSurface* surface, SharpPoint* point, int radius,
+                     unsigned int color) {}
 
 void SharpUpdateWindowSurface(SharpWindow* window) {
   XShmPutImage(window->display, window->window, window->data->gc,
