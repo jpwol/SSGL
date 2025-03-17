@@ -2,7 +2,22 @@
 
 #include <stdio.h>
 
-int SharpInit() { return 0; }
+#ifdef __linux__
+#define OS_IMP 1
+#elif defined(_WIN32)
+#define OS_IMP 2
+#endif
+
+int SharpInit() {
+  if (OS_IMP == 1) {
+    printf("found linux\n");
+  } else if (OS_IMP == 2) {
+    printf("found windows\n");
+  } else {
+    printf("unidentified os\n");
+  }
+  return 0;
+}
 
 SharpWindow* SharpCreateWindow(int width, int height, const char* title) {
   // gang? fonem?
@@ -29,14 +44,29 @@ SharpWindow* SharpCreateWindow(int width, int height, const char* title) {
       _w->display, RootWindow(_w->display, 0), 10, 10, width, height, 1,
       BlackPixel(_w->display, _w->screen), WhitePixel(_w->display, _w->screen));
 
+  _w->window = XCreateWindow(
+      _w->display, RootWindow(_w->display, 0), 10, 10, width, height, 0,
+      DefaultDepth(_w->display, _w->screen), CopyFromParent,
+      DefaultVisual(_w->display, _w->screen), 0, 0);
+
   if (!_w->window) {
     fprintf(stderr, "Failed to create X window\n");
     exit(1);
   }
 
+  // Make the window floating by default by window managers.
+  // FIXME!!!: Abstract this further away. Check for window manager or display
+  // environment first before doing this. Hug me. Kiss me.
+  Atom wm_window_type = XInternAtom(_w->display, "_NET_WM_WINDOW_TYPE", False);
+  Atom wm_window_type_dialog =
+      XInternAtom(_w->display, "_NET_WM_WINDOW_TYPE_DIALOG", False);
+  XChangeProperty(_w->display, _w->window, wm_window_type, XA_ATOM, 32,
+                  PropModeReplace, (unsigned char*)&wm_window_type_dialog, 1);
+
   XSelectInput(_w->display, _w->window,
                ExposureMask | KeyPressMask | KeyReleaseMask | ButtonPressMask |
                    ButtonReleaseMask | StructureNotifyMask);
+
   // Set the title of the window
   XStoreName(_w->display, _w->window, title);
 

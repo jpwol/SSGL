@@ -54,37 +54,23 @@ void SharpDrawPoint(SharpSurface* surface, SharpPoint* point,
 
 void SharpDrawLine(SharpSurface* surface, int x1, int y1, int x2, int y2,
                    unsigned int color) {
-  // if (x1 > x2) {
-  //   x1 = x1 ^ x2;
-  //   x2 = x1 ^ x2;
-  //   x1 = x1 ^ x2;
-  // }
-  // if (y1 > y2) {
-  //   y1 = y1 ^ y2;
-  //   y2 = y1 ^ y2;
-  //   y1 = y1 ^ y2;
-  // }
+  int dx = abs(x2 - x1), sx = x1 < x2 ? 1 : -1;
+  int dy = -abs(y2 - y1), sy = y1 < y2 ? 1 : -1;
+  int err = dx + dy, e2;
 
-  // int slope = 2 * (y2 - y1);
-  // int slope_error = slope - (x2 - x1);
+  while (1) {
+    if (x1 >= 0 && x1 < surface->w && y1 >= 0 && y1 < surface->h)
+      ((unsigned int*)surface->pixels)[y1 * surface->w + x1] = color;
 
-  int dx = x2 - x1;
-  int dy = y2 - y1;
-  int decision = 2 * dy - dx;
-
-  unsigned int* pixels = (unsigned int*)surface->pixels;
-  for (int x = x1, y = y1; x <= x2; x++) {
-    if (x1 < 0 || x1 > surface->w || x2 < 0 || x2 > surface->w || y1 < 0 ||
-        y1 > surface->h || y2 < 0 || y2 > surface->h)
-      continue;
-    pixels[y * surface->w + x] = color;
-
-    if (decision > 0) {
-      y++;
-      decision += 2 * (dy - dx);
+    if (x1 == x2 && y1 == y2) break;
+    e2 = 2 * err;
+    if (e2 >= dy) {
+      err += dy;
+      x1 += sx;
     }
-    if (decision <= 0) {
-      decision += 2 * dy;
+    if (e2 <= dx) {
+      err += dx;
+      y1 += sy;
     }
   }
 }
