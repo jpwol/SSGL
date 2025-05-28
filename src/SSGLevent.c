@@ -1,17 +1,17 @@
-#include "SharpEvent.h"
+#include "SSGLEvent.h"
 
-SharpKey SharpGetKey(XKeyEvent* event) {
+SSGLKey SSGLGetKey(XKeyEvent* event) {
   KeySym keysym = XLookupKeysym(event, 0);
   KeySym keysympad = XLookupKeysym(event, 1);
 
   if (keysym >= XK_0 && keysym <= XK_9)
-    return (SharpKey)(keysym - XK_0 + (int)(SK_0));
+    return (SSGLKey)(keysym - XK_0 + (int)(SK_0));
 
   if (keysym >= XK_a && keysym <= XK_z)
-    return (SharpKey)(keysym - XK_a + (int)(SK_a));
+    return (SSGLKey)(keysym - XK_a + (int)(SK_a));
 
   if (keysympad >= XK_KP_0 && keysympad <= XK_KP_9)
-    return (SharpKey)(keysympad - XK_KP_0 + (int)(SK_N0));
+    return (SSGLKey)(keysympad - XK_KP_0 + (int)(SK_N0));
 
   switch (keysym) {
     case XK_Escape:
@@ -89,25 +89,25 @@ SharpKey SharpGetKey(XKeyEvent* event) {
   }
 }
 
-void SharpPollEvents(SharpWindow* window, SharpEvent* event) {
+void SSGLPollEvents(SSGLWindow* window, SSGLEvent* event) {
   XEvent x_event;
   while (XPending(window->display) > 0) {
     XNextEvent(window->display, &x_event);
 
     switch (x_event.type) {
       case KeyPress:
-        event->type = SharpKeyPress;
-        event->keyPressed = SharpGetKey(&x_event.xkey);
+        event->type = SSGLKeyPress;
+        event->keyPressed = SSGLGetKey(&x_event.xkey);
         break;
       case KeyRelease:
-        event->type = SharpKeyRelease;
-        event->keyReleased = SharpGetKey(&x_event.xkey);
+        event->type = SSGLKeyRelease;
+        event->keyReleased = SSGLGetKey(&x_event.xkey);
         break;
       case ButtonPress:
-        event->type = SharpMousePress;
+        event->type = SSGLMousePress;
         break;
       case ButtonRelease:
-        event->type = SharpMouseRelease;
+        event->type = SSGLMouseRelease;
         break;
       default:
         break;

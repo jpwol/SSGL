@@ -1,4 +1,4 @@
-#include "SharpWindow.h"
+#include "SSGLWindow.h"
 
 #include <stdio.h>
 
@@ -8,7 +8,7 @@
 #define OS_IMP 2
 #endif
 
-int SharpInit() {
+int SSGLInit() {
   if (OS_IMP == 1) {
     printf("found linux\n");
   } else if (OS_IMP == 2) {
@@ -19,9 +19,9 @@ int SharpInit() {
   return 0;
 }
 
-SharpWindow* SharpCreateWindow(int width, int height, const char* title) {
+SSGLWindow* SSGLCreateWindow(int width, int height, const char* title) {
   // gang? fonem?
-  SharpWindow* _w = (SharpWindow*)malloc(sizeof(SharpWindow));
+  SSGLWindow* _w = (SSGLWindow*)malloc(sizeof(SSGLWindow));
 
   _w->w = width;
   _w->h = height;
@@ -72,7 +72,7 @@ SharpWindow* SharpCreateWindow(int width, int height, const char* title) {
 
   XMapWindow(_w->display, _w->window);
 
-  _w->data = (SharpWindowData*)malloc(sizeof(SharpWindowData));
+  _w->data = (SSGLWindowData*)malloc(sizeof(SSGLWindowData));
   _w->data->gc = XCreateGC(_w->display, _w->window, 0, NULL);
   _w->data->image =
       XShmCreateImage(_w->display, DefaultVisual(_w->display, _w->screen),
@@ -103,7 +103,7 @@ SharpWindow* SharpCreateWindow(int width, int height, const char* title) {
   return _w;
 }
 
-void SharpDestroyWindow(SharpWindow* window) {
+void SSGLDestroyWindow(SSGLWindow* window) {
   XShmDetach(window->display, &window->data->shminfo);
   shmdt(window->data->image->data);
   XDestroyWindow(window->display, window->window);

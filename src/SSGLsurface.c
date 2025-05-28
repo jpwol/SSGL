@@ -1,7 +1,7 @@
-#include "SharpSurface.h"
+#include "SSGLSurface.h"
 
-SharpSurface* SharpGetWindowSurface(SharpWindow* window) {
-  SharpSurface* s = (SharpSurface*)malloc(sizeof(SharpSurface));
+SSGLSurface* SSGLGetWindowSurface(SSGLWindow* window) {
+  SSGLSurface* s = (SSGLSurface*)malloc(sizeof(SSGLSurface));
 
   s->w = window->w;
   s->h = window->h;
@@ -12,8 +12,8 @@ SharpSurface* SharpGetWindowSurface(SharpWindow* window) {
   return s;
 }
 
-SharpSurface* SharpCreateSurface(SharpWindow* window, int width, int height) {
-  SharpSurface* s = (SharpSurface*)malloc(sizeof(SharpSurface));
+SSGLSurface* SSGLCreateSurface(SSGLWindow* window, int width, int height) {
+  SSGLSurface* s = (SSGLSurface*)malloc(sizeof(SSGLSurface));
 
   // NEED TO ALLOCATE shminfo for SURFACE
   //
@@ -27,7 +27,7 @@ SharpSurface* SharpCreateSurface(SharpWindow* window, int width, int height) {
   return s;
 }
 
-void SharpClearSurfaceColor(SharpSurface* surface, unsigned int color) {
+void SSGLClearSurfaceColor(SSGLSurface* surface, unsigned int color) {
   uint32_t* pixels = (uint32_t*)surface->pixels;
   size_t total_pixels = surface->w * surface->h;
 
@@ -42,9 +42,8 @@ void SharpClearSurfaceColor(SharpSurface* surface, unsigned int color) {
   }
 }
 
-// Change to take int x int y instead of a SharpPoint structure
-void SharpDrawPoint(SharpSurface* surface, SharpPoint* point,
-                    unsigned int color) {
+// Change to take int x int y instead of a SSGLPoint structure
+void SSGLDrawPoint(SSGLSurface* surface, SSGLPoint* point, unsigned int color) {
   if (point->x < 0 || point->y < 0 || point->x >= surface->w ||
       point->y >= surface->h)
     return;
@@ -52,8 +51,8 @@ void SharpDrawPoint(SharpSurface* surface, SharpPoint* point,
   ((unsigned int*)surface->pixels)[point->y * surface->w + point->x] = color;
 }
 
-void SharpDrawLine(SharpSurface* surface, int x1, int y1, int x2, int y2,
-                   unsigned int color) {
+void SSGLDrawLine(SSGLSurface* surface, int x1, int y1, int x2, int y2,
+                  unsigned int color) {
   int dx = abs(x2 - x1), sx = x1 < x2 ? 1 : -1;
   int dy = -abs(y2 - y1), sy = y1 < y2 ? 1 : -1;
   int err = dx + dy, e2;
@@ -75,9 +74,9 @@ void SharpDrawLine(SharpSurface* surface, int x1, int y1, int x2, int y2,
   }
 }
 
-void SharpDrawRect(SharpSurface* surface, SharpRect* rect) {}
+void SSGLDrawRect(SSGLSurface* surface, SSGLRect* rect) {}
 
-void SharpFillRect(SharpSurface* surface, SharpRect* rect, unsigned int color) {
+void SSGLFillRect(SSGLSurface* surface, SSGLRect* rect, unsigned int color) {
   int x = rect->x;
   int w = rect->x + rect->w;
   int y = rect->y;
@@ -109,8 +108,8 @@ void SharpFillRect(SharpSurface* surface, SharpRect* rect, unsigned int color) {
   }
 }
 
-void SharpDrawCircle(SharpSurface* surface, SharpPoint* point, int radius,
-                     unsigned int color) {
+void SSGLDrawCircle(SSGLSurface* surface, SSGLPoint* point, int radius,
+                    unsigned int color) {
   int x = radius;
   int y = 0;
   int decision = 1 - radius;
@@ -154,15 +153,15 @@ void SharpDrawCircle(SharpSurface* surface, SharpPoint* point, int radius,
   }
 }
 
-void SharpFillCircle(SharpSurface* surface, SharpPoint* point, int radius,
-                     unsigned int color) {}
+void SSGLFillCircle(SSGLSurface* surface, SSGLPoint* point, int radius,
+                    unsigned int color) {}
 
-void SharpUpdateWindowSurface(SharpWindow* window) {
+void SSGLUpdateWindowSurface(SSGLWindow* window) {
   XShmPutImage(window->display, window->window, window->data->gc,
                window->data->image, 0, 0, 0, 0, window->w, window->h, False);
   XSync(window->display, False);
 }
 
-void SharpBlitSurface(SharpSurface* surface) {}
+void SSGLBlitSurface(SSGLSurface* surface) {}
 
-void SharpDestroySurface(SharpSurface* surface) { free(surface); }
+void SSGLDestroySurface(SSGLSurface* surface) { free(surface); }

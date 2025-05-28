@@ -5,10 +5,10 @@
 extern "C" {
 #endif
 
-typedef struct SharpRect {
+typedef struct SSGLRect {
   int x, y;
   int w, h;
-} SharpRect;
+} SSGLRect;
 
 #ifdef __cplusplus
 }

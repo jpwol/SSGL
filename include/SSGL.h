@@ -5,10 +5,10 @@
 extern "C" {
 #endif
 
-#include "SharpEvent.h"
-#include "SharpRect.h"
-#include "SharpSurface.h"
-#include "SharpWindow.h"
+#include "SSGLEvent.h"
+#include "SSGLRect.h"
+#include "SSGLSurface.h"
+#include "SSGLWindow.h"
 
 #ifdef __cplusplus
 }

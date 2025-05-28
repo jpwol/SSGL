@@ -4,9 +4,9 @@
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 
-#include "SharpWindow.h"
+#include "SSGLWindow.h"
 
-typedef enum SharpKeySym {
+typedef enum SSGLKeySym {
   SK_UNKNOWN,
   SK_ESC,
   SK_TAB,
@@ -100,29 +100,29 @@ typedef enum SharpKeySym {
   SK_DOWN,
   SK_LEFT,
   SK_RIGHT,
-} SharpKey;
+} SSGLKey;
 
-typedef enum SharpEventType {
-  SharpKeyPress = 1,
-  SharpKeyRelease,
-  SharpMousePress,
-  SharpMouseRelease,
-  SharpWindowResize,
-} SharpEventType;
+typedef enum SSGLEventType {
+  SSGLKeyPress = 1,
+  SSGLKeyRelease,
+  SSGLMousePress,
+  SSGLMouseRelease,
+  SSGLWindowResize,
+} SSGLEventType;
 
-typedef struct SharpEvent {
+typedef struct SSGLEvent {
   int type;
   union {
-    SharpKey keyPressed;
-    SharpKey keyReleased;
+    SSGLKey keyPressed;
+    SSGLKey keyReleased;
   };
-} SharpEvent;
+} SSGLEvent;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern void SharpPollEvents(SharpWindow* window, SharpEvent* event);
+extern void SSGLPollEvents(SSGLWindow* window, SSGLEvent* event);
 
 #ifdef __cplusplus
 }

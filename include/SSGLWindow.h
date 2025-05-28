@@ -12,25 +12,25 @@
 extern "C" {
 #endif
 
-typedef struct SharpWindowData {
+typedef struct SSGLWindowData {
   XImage* image;
   GC gc;
   XShmSegmentInfo shminfo;
-} SharpWindowData;
+} SSGLWindowData;
 
-typedef struct SharpWindow {
+typedef struct SSGLWindow {
   Display* display;
   Window window;
   int screen;
   unsigned int w;
   unsigned int h;
-  SharpWindowData* data;
-} SharpWindow;
+  SSGLWindowData* data;
+} SSGLWindow;
 
-extern int SharpInit();
+extern int SSGLInit();
 
-extern SharpWindow* SharpCreateWindow(int width, int height, const char* title);
-extern void SharpDestroyWindow(SharpWindow* window);
+extern SSGLWindow* SSGLCreateWindow(int width, int height, const char* title);
+extern void SSGLDestroyWindow(SSGLWindow* window);
 
 #ifdef __cplusplus
 }
