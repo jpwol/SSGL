@@ -1,5 +1,5 @@
-#ifndef _SHARP_EVENT_H_
-#define _SHARP_EVENT_H_
+#ifndef _SSGL_EVENT_H_
+#define _SSGL_EVENT_H_
 
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
@@ -9,6 +9,7 @@
 typedef enum SSGLKeySym {
   SK_UNKNOWN,
   SK_ESC,
+  SK_SEMICOLON,
   SK_TAB,
   SK_CAPS,
   SK_LSHIFT,
@@ -20,6 +21,7 @@ typedef enum SSGLKeySym {
   SK_LALT,
   SK_RALT,
   SK_SPACE,
+  SK_COLON,
   SK_RETURN,
   SK_BACKSPACE,
   SK_0,

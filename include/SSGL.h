@@ -1,5 +1,5 @@
-#ifndef _SHARP_H_
-#define _SHARP_H_
+#ifndef _SSGL_H_
+#define _SSGL_H_
 
 #ifdef __cplusplus
 extern "C" {

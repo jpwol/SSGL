@@ -14,6 +14,8 @@ SSGLKey SSGLGetKey(XKeyEvent* event) {
     return (SSGLKey)(keysympad - XK_KP_0 + (int)(SK_N0));
 
   switch (keysym) {
+    case XK_semicolon:
+      return SK_SEMICOLON;
     case XK_Escape:
       return SK_ESC;
     case XK_Tab:
@@ -38,6 +40,8 @@ SSGLKey SSGLGetKey(XKeyEvent* event) {
       return SK_RALT;
     case XK_space:
       return SK_SPACE;
+    case XK_colon:
+      return SK_COLON;
     case XK_Return:
       return SK_RETURN;
     case XK_BackSpace:

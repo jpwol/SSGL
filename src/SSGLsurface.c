@@ -1,5 +1,7 @@
 #include "SSGLSurface.h"
 
+#include <X11/Xlib.h>
+
 SSGLSurface* SSGLGetWindowSurface(SSGLWindow* window) {
   SSGLSurface* s = (SSGLSurface*)malloc(sizeof(SSGLSurface));
 
@@ -13,11 +15,11 @@ SSGLSurface* SSGLGetWindowSurface(SSGLWindow* window) {
 }
 
 SSGLSurface* SSGLCreateSurface(SSGLWindow* window, int width, int height) {
-  SSGLSurface* s = (SSGLSurface*)malloc(sizeof(SSGLSurface));
+  SSGLSurface* s = malloc(sizeof(SSGLSurface));
 
   // NEED TO ALLOCATE shminfo for SURFACE
   //
-  // CONSIDER CHANGING WINDOW TO HOLD A SHARP SURFACE INSTEAD OF XShmSegmentInfo
+  // CONSIDER CHANGING WINDOW TO HOLD A SSGL SURFACE INSTEAD OF XShmSegmentInfo
   // AND PUT XShmSegmentInfo into SURFACE STRUCT      MAYBE??
   s->ximage = XShmCreateImage(window->display,
                               DefaultVisual(window->display, window->screen),

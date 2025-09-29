@@ -1,5 +1,5 @@
-#ifndef _SHARP_WINDOW_H_
-#define _SHARP_WINDOW_H_
+#ifndef _SSGL_WINDOW_H_
+#define _SSGL_WINDOW_H_
 
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>
@@ -12,11 +12,17 @@
 extern "C" {
 #endif
 
-typedef struct SSGLWindowData {
+typedef enum {
+  SSGL_WINDOW_TYPE_NORMAL,
+  SSGL_WINDOW_TYPE_DIALOG,
+  SSGL_WINDOW_TYPE_FULLSCREEN,
+} SSGLWindowType;
+
+typedef struct SSGLSurfaceData {
   XImage* image;
   GC gc;
   XShmSegmentInfo shminfo;
-} SSGLWindowData;
+} SSGLSurfaceData;
 
 typedef struct SSGLWindow {
   Display* display;
@@ -24,12 +30,13 @@ typedef struct SSGLWindow {
   int screen;
   unsigned int w;
   unsigned int h;
-  SSGLWindowData* data;
+  SSGLSurfaceData* data;
 } SSGLWindow;
 
 extern int SSGLInit();
 
-extern SSGLWindow* SSGLCreateWindow(int width, int height, const char* title);
+extern SSGLWindow* SSGLCreateWindow(int width, int height, const char* title,
+                                    SSGLWindowType wtype);
 extern void SSGLDestroyWindow(SSGLWindow* window);
 
 #ifdef __cplusplus

@@ -1,5 +1,5 @@
-#ifndef _SHARP_SURFACE_H_
-#define _SHARP_SURFACE_H_
+#ifndef _SSGL_SURFACE_H_
+#define _SSGL_SURFACE_H_
 
 #include <X11/Xlib.h>
 #include <X11/extensions/XShm.h>
